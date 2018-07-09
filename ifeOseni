@@ -1,0 +1,177 @@
+
+#include <stdio.h>
+int main ()
+{
+
+    //Creating Database In C
+char *itemName[5]={" Milo   ", "Sugar   ", "Lipton Tea", "Bournvita", "Milk     "};//Without * this array will not work
+//int item[5];//itemAmount In Stock
+float itemPrice[5]={1000,200,10,900,100};//Prices of items
+float buyItem[5];//For ordering Items In Store By Users
+int id[5]={1,2,3,4,5};
+
+//Original Values Of Items In Stock
+float noInStock[5]={0,0,0,0,0};//Amount of packets in store
+printf("Welcome The Prices Of Our Items Are Given Below \n\b");
+     for (int no = 0; no < 5; no++ )
+{
+    printf("%s: ",itemName[no]);
+    printf("%.2f: \n ",  itemPrice[no]);
+}
+printf("If you do not want to buy enter 0 else enter the amount in digits e.g 1,3,4 \n");
+
+//Ordering Items
+    for(int i=0;i <5;i++){
+        printf("How many packets of %s ",itemName[i]);
+        printf("do you want to buy? ");
+        scanf("%f", &buyItem[i]);
+    }
+//Printing Out Amount Of Items The User Wants To Buy
+
+     for(int i=0;i <5;i++){
+        printf("You are buying %.2f", buyItem[i]);
+        printf(" amount of  %s", itemName[i]);
+        printf("\n");
+    }
+
+
+//Generated Report.
+    FILE *report=fopen("CSC332.txt","w");//Initialization of the file and naming the file while setting it to write mode.
+//Supermarket checks the store and reorders immediately.
+float newInStock[5];
+for(int order=0;order <5;order++){
+        if(noInStock[order] <= 5 ){
+                //printf("We are bringing new stock  for %s\n ",itemName[order]);
+                fprintf(report,"We are bringing new stock  for %s...........\n",itemName[order]);
+            newInStock[order] = noInStock[order] + 20;
+              //  printf("New Stocks have Arrived  for %s\n ", itemName[order]);
+              fprintf(report,"20 Packets have Arrived  for %s we had %.2f in stock before the new arrival \n",itemName[order],noInStock[order]);
+        }else{
+            newInStock[order] =noInStock[order];
+            //printf("There is enough stock available for %s\n ",itemName[order]);
+              fprintf(report,"There is enough stock available for %s\n ",itemName[order]);
+
+        }
+}
+//Quantity Remaining After Sales
+float remainStock[5];
+for(int left=0;left <5;left++){
+    remainStock[left]=newInStock[left]-buyItem[left];
+}
+for(int remain = 0; remain < 5; remain++ )
+{
+    //printf("%s Amount of ",itemName[r]);
+    //printf("remaining in stock is %.2f",  remainStock[remain]);
+    //printf("\n");
+    fprintf(report,"Quantity In Stock Of %s is %.2f packets\n",itemName[remain],remainStock[remain]);;
+}
+//Printing Amount Of Items Bought
+for (int r = 0; r < 5; r++ )
+{
+    //printf("%s Amount of items bought ",itemName[r]);
+    //printf(" %.2f",  buyItem[r]);
+    //printf("\n");
+    fprintf(report," Amount of %s bought is %.2f\n",itemName[r],buyItem[r]);
+}
+
+//Discount To Be Given On TotalPayable.
+
+float discount[5];
+float totalDiscount=0;
+float disc[5];
+for(int i=0; i <5; i++){
+    if(buyItem[i] >= 5){
+        discount[i] =  0.05 * buyItem[i] *itemPrice[i]  ;
+
+        //printf("Discount given is %.2f",discount[i]);
+       // printf(" for the item %s\n",itemName[i]);
+
+    }
+    else{
+        discount[i]=0;
+       // printf("Discount given is %.2f",discount[i]);
+       // printf("for the item %s\n",buyItem[i]);
+    }
+}
+
+//Getting the total discount Discount Loop
+for(int i=0; i <5; i++){
+            totalDiscount += discount[i];
+}
+
+
+
+//Original Amount Payable
+ float origianlPay[5];
+  for(int i=0;i <5;i++){
+    origianlPay[i] = buyItem[i] * itemPrice[i] ;
+    printf("Original Amount to be paid for %s ",itemName[i]);
+    printf("%.2f\n ",origianlPay[i]);
+}
+
+//Total Payable
+float Total_Payable[5];
+for(int i=0;i <5;i++){
+    Total_Payable[i] = origianlPay[i] - discount[i];
+    printf("Total Payable for %s is %.2f",itemName[i],Total_Payable[i]);
+    printf("with discount %.2f\n",discount[i]);
+
+}
+float netPayable=0;
+for(int pay=0;pay <5;pay++){
+    netPayable +=Total_Payable[pay];
+}
+//Printing Original Amount Payable
+ for(int i=0;i <5;i++){
+   // printf("Amount paid is %d\n ",origianlPay[i]);
+}
+
+//Designing The Interface For The Invoice
+
+
+    fprintf(report,"Welcome Dr Akinola,WELCOME TO Our STORE.Here is your Invoice\n\n");
+    printf("Welcome Dr Akinola,WELCOME TO Our STORE.Here is your Invoice\n\n");
+    fprintf(report,"HERE ARE THE ITEMS WE HAVE IN STORE.\n\n");
+    printf("HERE ARE THE ITEMS WE HAVE IN STORE.\n\n");
+    printf("\t\t\t\t\t\t ABC SUPERMARKET\n");
+    fprintf(report,"\t\t\t\t\t\t ABC SUPERMARKET\n");
+    printf("\t\t\t\t\t\t UI Ibadan\n");
+    fprintf(report,"\t\t\t\t\t\t UI Ibadan\n");
+
+printf("Sales Invoices for ................\t\tDate:26/6/2015\n");
+fprintf(report,"Sales Invoices for ................\t\t\t\t\t\tDate:26/6/2015\n");
+
+printf("S/N \t Item \t\t Number of Packet Bought    \t Unit Price Per Packet \t Discount  Given\t Total Payable\n");
+fprintf(report,"S/N \t Item \t\t Number of Packet Bought    \t Unit Price Per Packet \t Discount  Given\t Total Payable\n");
+
+//printf("%.3f \t %s \t\t  %.2f    \t %.2f \t %.2f\t %.2f\n");
+
+for(int i=0 ; i< 5;i++){
+            printf("%3d \t %s \t\t  %.0f    \t\t\t  %.2f  \t\t %.2f \t\t\t %.2f\n",id[i],itemName[i],buyItem[i],itemPrice[i],discount[i],Total_Payable[i]);
+    fprintf(report,"%3d \t %s \t\t  %.0f    \t\t\t  %.2f  \t\t %.2f \t\t\t %.2f\n",id[i],itemName[i],buyItem[i],itemPrice[i],discount[i],Total_Payable[i]);
+
+    //  printf(" %d \t %s \t",id[i],itemName[i]);
+    //  printf("\t %.2f \t %.2f \t %.2f \t %.2f",buyItem[i],itemPrice[i],discount[i],Total_Payable[i])  ;
+      //printf(" %d\t%s\t\t%d ",id[i],itemName[i],itemPrice[i]);
+    //printf(" %d\t%s\t%d ",id[i],"\t %s" ,itemName[i],dicount, Total_Payable[i]);
+    printf("\n");
+    fprintf(report,"\n");
+
+}
+
+
+    printf("\t\t\t\t\t\t Total discount Given  %.2f \n",totalDiscount);
+    printf("\t\t\t\t\t\t Net Payable  %.2f \n\n\n",netPayable);
+    printf("\t\t\t\t\t\t ...................................\n");
+    printf("\t\t\t\t\t\t\t Manager \n");
+    printf("\t\t\t\t\t\t Thanks for your patronage\n");
+    fprintf(report,"\t\t\t\t\t\t Total discount Given  %.2f \n",totalDiscount);
+    fprintf(report,"\t\t\t\t\t\t Net Payable  %.2f \n\n\n",netPayable);
+    fprintf(report,"\t\t\t\t\t\t ...................................\n");
+    fprintf(report,"\t\t\t\t\t\t\t Manager \n");
+    fprintf(report,"\t\t\t\t\t\t Thanks for your patronage\n");
+    fclose(report);
+
+    return 0;
+
+}
